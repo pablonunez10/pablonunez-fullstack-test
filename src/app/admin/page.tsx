@@ -7,16 +7,11 @@ async function getSalesData () {
         _sum: { pricePaidInCents: true},
         _count: true
     })
-    await wait(2000)
     return {
         amount: (data._sum.pricePaidInCents || 0) /100,
         NumberOfSales: data._count
     }
 }
-function wait (duration: number) {
-    return new Promise(resolve => setTimeout(resolve, duration))
-}
-
 async function getUserData() {
     const [userCount, orderData] = await Promise.all([
         db.user.count(),
