@@ -1,7 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import db from "@/db/db";
 import { formatNumber, formatCurrency} from "@/lib/formatlers";
-import { resolve } from "path";
 async function getSalesData () {
     const data = await db.order.aggregate({
         _sum: { pricePaidInCents: true},
