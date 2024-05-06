@@ -5,7 +5,7 @@ import  Link  from 'next/link'
 import { Button } from './ui/button'
 import Image from 'next/image'
 type ProductCardProps = {
-    id: number
+    id: string
     name: string
     priceInCents: number
     description: string
@@ -33,4 +33,28 @@ export default function ProductCard({id, name, priceInCents, description, imageP
         </CardFooter>
     </Card>
   )
+}
+
+export function ProductCardSkeleton() {
+    return (
+        <Card className='flex overflow-hidden flex-col animate-pulse'>
+        <div className='w-full aspect-video bg-gray-300'/>
+        <CardHeader>
+            <CardTitle>
+                <div className='w-3/4 h-6 rounded-full bg-gray-300'/>
+            </CardTitle>
+            <CardDescription>
+                <div className='w-1/4 h-4 rounded-full bg-gray-300'/>
+            </CardDescription>
+        </CardHeader>
+        <CardContent className='flex-grow'>
+            <div className='w-full h-4 rounded-full bg-gray-300'/>
+            <div className='w-full h-4 rounded-full bg-gray-300'/>
+            <div className='w-3/4 h-4 rounded-full bg-gray-300'/>
+        </CardContent>
+        <CardFooter>
+            <Button className="w-full" disabled size='lg'></Button>
+        </CardFooter>
+    </Card>
+    )
 }

@@ -3,6 +3,7 @@ import {z} from "zod"
 import fs from "fs/promises"
 import db from "@/db/db"
 import { notFound, redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 const fileSchema = z.instanceof(File, {message: "Required"})
 const imageSchema = fileSchema.refine(file => file.size === 0 || file.type.startsWith("image/"))
 const addSchema = z.object({
@@ -34,7 +35,8 @@ export  default async function addProduct(prevState : unknown, formData: FormDat
         filePath,
         imagePath
     },})
-
+    revalidatePath("/")
+    revalidatePath("/products")
     redirect("/admin/products")
 }
 const editSchema = addSchema.extend({

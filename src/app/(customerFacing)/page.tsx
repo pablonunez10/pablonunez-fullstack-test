@@ -3,7 +3,9 @@ import db from "@/db/db"
 import { Product } from "@prisma/client"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
-import ProductCard from "@/components/ProductCard"
+import ProductCard, { ProductCardSkeleton } from "@/components/ProductCard"
+import { Suspense} from "react"
+import { cache } from "@/lib/cache"
 export default function HomePage() {
     return (
      <main className="space-y-12">
@@ -12,20 +14,20 @@ export default function HomePage() {
      </main>
     )
   }
-function getMostPopularProducts(){
+const getMostPopularProducts = cache(() => {
     return db.product.findMany({
         where: {isAvailableFourPurchase: true},
         orderBy: {orders : {_count: "desc"}},
         take: 6
     })
-}
-function getNewestProducts(){
+}, ["/", "getMostPopularProducts"], {revalidate: 60 * 60 * 24})
+const getNewestProducts = cache(() => {
     return db.product.findMany({
         where: {isAvailableFourPurchase: true},
         orderBy: {createdAt: "desc"},
         take: 6
     })
-}
+}, ["/", "getNewestProducts"])
 
 
 type ProductGridSectionProps = {
@@ -46,9 +48,25 @@ async function ProductGridSection ({productsFetcher, title}: ProductGridSectionP
             </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {(await productsFetcher()).map(product => (
-                <ProductCard key={product.id} {...product}/>
-            ))}
+            <Suspense fallback={
+                <>
+                    <ProductCardSkeleton />
+                    <ProductCardSkeleton />
+                    <ProductCardSkeleton />
+                </>
+            }>
+                <ProductSuspense productsFetcher={productsFetcher}/>
+            </Suspense>
+            
         </div>
-    </div>)
+    </div>
+    )
+}
+
+async function ProductSuspense({productsFetcher}:{productsFetcher : () => Promise<Product[]>} ) {
+    return (
+        (await productsFetcher()).map(product => (
+            <ProductCard key={product.id} {...product}/>
+        ))
+    )
 }
