@@ -44,5 +44,5 @@ export default async function SuccessPage({searchParams} : {searchParams : {paym
 async function createDownloadVerification(productId: string) {
     return (
         await db.downloadVerification.create({data : {productId, expiresAt: new Date(Date.now() + 1000 * 60 *24)}})
-    ).id
+    )
 }
