@@ -6,7 +6,7 @@ import { formatCurrency } from "@/lib/formatlers"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FormEvent, useState } from "react"
-import { userOrderExists } from "@/app/admin/_actions/orders"
+import { userOrderExists } from "@/app/actions/orders"
 type CheckoutFormProps = {
     product: {
         id: string
@@ -72,7 +72,9 @@ function Form({priceInCents, productId} : {priceInCents: number, productId: stri
                 setErrorMessage("An unknown error occurred")
             }
         }).finally(() => setIsLoading(false))
-    }
+        // console.log('oppp')
+    }     
+
     return (
         <form onSubmit={handleSubmit}>
             <Card>
@@ -93,13 +95,14 @@ function Form({priceInCents, productId} : {priceInCents: number, productId: stri
                 </CardContent>
                 <CardFooter>
                     <Button 
+                        type="submit"
                         className="w-full" 
                         size="lg" 
                         disabled={stripe == null || elements == null || isLoading}>
                            {isLoading ? "Purchasing.." : `Purchase - ${formatCurrency(priceInCents / 100)}`}
                     </Button>
                 </CardFooter>
-            </Card>
+            </Card> 
         </form>
     )
 }
