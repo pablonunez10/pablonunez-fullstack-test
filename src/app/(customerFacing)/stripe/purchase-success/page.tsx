@@ -8,7 +8,13 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 export default async function SuccessPage({searchParams} : {searchParams : {payment_intent: string}}) {
     const paymentIntent = await stripe.paymentIntents.retrieve(searchParams.payment_intent)
-    const product = await db.product.findUnique({where : {id : paymentIntent.metadata.productID}})
+    let product = null;
+    try {
+        product = await db.product.findUnique({where : {id : paymentIntent.metadata.productId}})
+    } catch (error) {
+        console.log("Error finding product with prisma", error);
+    }
+    
     if(product == null) return notFound()
     const isSuccess = paymentIntent.status === "succeeded"
     return (
