@@ -29,13 +29,13 @@ model User {
   email String @unique
   createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
-  order Order[]
+  orders Order[]
 }
 
 model Order {
   id String @id @default(uuid())
   pricePaidInCents Int
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   updateAt DateTime @updatedAt
   userId String
   productId String
@@ -46,7 +46,7 @@ model Order {
 model DownloadVerification {
   id String @id @default(uuid())
   expiresAt DateTime
-  createAt DateTime @default(now())
+  createdAt DateTime @default(now())
   productId String
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
