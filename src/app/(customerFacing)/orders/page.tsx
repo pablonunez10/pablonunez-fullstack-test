@@ -26,7 +26,6 @@ export default function MyOrdersPage() {
         </CardContent>
         <CardFooter>
           {data.message ? <p>{data.message}</p> : <SubmitButton />}
-          <SubmitButton />
         </CardFooter>
       </Card>
     </form>
@@ -37,7 +36,7 @@ function SubmitButton () {
   const { pending } = useFormStatus()
   return (
     <Button className="w-full" size="lg" disabled={pending} type="submit">
-      {pending ? "Sending..." : "Send"}
+      {pending ? "Sending..." : "Send.."}
     </Button>
   )
 }
